@@ -1,6 +1,13 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package server;
 
-
+/*
+added player and room
+*/
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,24 +27,32 @@ public class Server {
      * @param args the command line arguments
      * @throws java.io.IOException
      */
+    //Aceasta lista contine toti utilizatorii logati in server
+    private static ArrayList <Player> listaUtilizatori;
+    private static ArrayList <room> listaCamere;
     
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         int clientNumber=0;
+        listaUtilizatori=new ArrayList<>();
+        listaCamere=new ArrayList();
         try(ServerSocket listener = new ServerSocket(9999)) {
             while(true){
-            new LoginRegister(listener.accept(),clientNumber++).start();
+            new Player(listener.accept(),clientNumber++).start();
             }
         }
         
     }
     
-    private static class LoginRegister extends Thread{
+    private static class Player extends Thread{
         private final int clientNumber;
         private final Socket socket;
         private final conexiuneBazaUtilizator conexiuneUtilizator;
-        
-        public LoginRegister(Socket socket,int clientNumber){
+        private int idUser;
+        private String numeUser;
+        public Player(Socket socket,int clientNumber){
+            idUser=0;
+            numeUser=new String();
             this.clientNumber=clientNumber;
             this.socket=socket;
             conexiuneUtilizator=new conexiuneBazaUtilizator();
@@ -62,6 +77,7 @@ public class Server {
                     {
                         out.println("0;Cere nerecunoscuta de server, a fost transmis un cod mai mic decat -1");
                     }
+                    else
                     switch (requestType) {
                     //S-a facut o cere de intrerupere a conexiunii
                         case -1:
@@ -70,7 +86,7 @@ public class Server {
                         }
                     //S-a facut o cerere de inregistrare
                         case 1:
-                        {System.out.println("sing");
+                        {
                             int resultConexiune=conexiuneUtilizator.inregistrare(cerere.get(1),cerere.get(2),cerere.get(3));
                         switch (resultConexiune) {
                             case -1:
@@ -101,19 +117,34 @@ public class Server {
                         }
                     //S-a facut o cere de login
                         case 2:
-                        {System.out.println("logun");
+                        {
                             int resultConexiune=conexiuneUtilizator.login(cerere.get(1),cerere.get(2));
+                            if(resultConexiune>0)
+                            {
+                                idUser=resultConexiune;
+                                numeUser=cerere.get(1);
+                                Boolean ok=true;
+                                int lungime=listaUtilizatori.size();
+                                for(int i=0;i<lungime;++i)
+                                    if(idUser==(listaUtilizatori.get(i).getID()))
+                                    {
+                                        ok=false;
+                                    }
+                                if(ok==true)
+                                {listaUtilizatori.add(this);
+                                 out.println("1;Login reusit");
+                                }
+                                else
+                                out.println("0;Exista deja un utilizator logat in acest cont");
+                            }
                         switch (resultConexiune) {
                             case -1:
                                 out.println("0;Login nereusit, au aparut probleme tehnice");
                                 break;
-                            case 0:
-                                out.println("1;Login reusit");
-                                break;
-                            case 1:
+                            case -2:
                                 out.println("0;Acest Username nu exista");
                                 break;
-                            case 2:
+                            case -3:
                                 out.println("0;Parola gresita");
                                 break;
                             default:
@@ -137,6 +168,19 @@ public class Server {
                                 out.println("0;Nu s-a putut trimite mail-ul, a aparut o problema");
                             }
                         }
+                        //Cerere pentru creare camera
+                        case 4:
+                        {
+                            String numeCamera=request.substring(2,request.length());
+                            try{
+                                listaCamere.add(new room(this,numeCamera));
+                                out.println("1;Camera creata");
+                            }catch(Exception e)
+                            {
+                                out.println("0;Probleme la creare");
+                            }
+                            
+                        }
                         default:
                         {
                             break;
@@ -158,6 +202,10 @@ public class Server {
             
             
         }
+     int getID()
+    {
+        return idUser;
+    }
     }
     
         private static ArrayList decode(String a)
@@ -166,33 +214,58 @@ public class Server {
         int n=a.length();
         int poz=0;
         String subExit=a.substring(0,1);
-        if(subExit.equals("-1"))
-        {
-            localList.add(subExit);
+        switch (subExit) {
+            case "-1":
+                localList.add(subExit);
+                break;
+            case "4":
+                localList.add(subExit);
+                break;
+            default:
+                for(int i=0;i<3;++i)
+                {
+                    String word="";
+                    while(poz<n)
+                    {
+                        String sub=a.substring(poz,poz+1);
+                        if(sub.equals(";"))
+                            break;
+                        word = word.concat(sub);
+                        ++poz;
+                        
+                    }
+                    ++poz;
+                    localList.add(word);
+                }       String word="";
+                String sub=a.substring(poz,n);
+                word=word.concat(sub);
+                localList.add(word);
+                break;
         }
-        
-        
-        
-        for(int i=0;i<3;++i)
-        {
-            String word="";
-            while(poz<n)
-            {
-                String sub=a.substring(poz,poz+1);
-                if(sub.equals(";"))
-                    break;
-                word = word.concat(sub);
-                ++poz;
-                
-            }
-            ++poz;
-            localList.add(word);
-        }
-        String word="";
-        String sub=a.substring(poz,n);
-        word=word.concat(sub);
-        localList.add(word);
-        return localList;
+    return localList;
 
     }
+        
+    private static class room{
+        Player white;
+        Player black;
+        String nume;
+        public room(Player X,String NUME ){
+            white=X;
+            black=null;
+            nume=NUME;
+        }
+        public Boolean addPlayer(Player X)
+        {
+            try{
+                black=X;
+            }
+            catch(Exception e){
+                System.out.println("There are problems in adding player");
+                return false;
+            }
+            return true;
+        }  
+        
+    }    
 }
