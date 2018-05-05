@@ -61,7 +61,6 @@ public class singup extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sing up");
-        setUndecorated(true);
 
         jPanelSingup.setBackground(new java.awt.Color(208, 225, 249));
         jPanelSingup.setForeground(new java.awt.Color(77, 100, 141));
