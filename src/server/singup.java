@@ -61,9 +61,20 @@ public class singup extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sing up");
+        setUndecorated(true);
 
         jPanelSingup.setBackground(new java.awt.Color(208, 225, 249));
         jPanelSingup.setForeground(new java.awt.Color(77, 100, 141));
+        jPanelSingup.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanelSingupMouseDragged(evt);
+            }
+        });
+        jPanelSingup.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanelSingupMousePressed(evt);
+            }
+        });
         jPanelSingup.setLayout(null);
 
         jPanelLogo.setBackground(new java.awt.Color(40, 54, 85));
@@ -232,7 +243,9 @@ public class singup extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
+    private int xMouse;
+    private int yMouse;
+    
     private void MailFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MailFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_MailFieldActionPerformed
@@ -333,6 +346,19 @@ public class singup extends javax.swing.JFrame {
                    
         }
     }//GEN-LAST:event_SingupButtonMouseClicked
+
+    private void jPanelSingupMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSingupMousePressed
+        System.out.println("adfsffdccxvg");
+        xMouse  = evt.getX();
+        yMouse = evt.getY();
+    }//GEN-LAST:event_jPanelSingupMousePressed
+
+    private void jPanelSingupMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanelSingupMouseDragged
+        
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+        this.setLocation(x - xMouse,y - yMouse);
+    }//GEN-LAST:event_jPanelSingupMouseDragged
 
     /**
      * @param args
