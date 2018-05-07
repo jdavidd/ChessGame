@@ -288,7 +288,7 @@ public class loginform extends javax.swing.JFrame {
                 }
                 case 1:{
                     JOptionPane.showMessageDialog(null, mesajServer,"OK", JOptionPane.CLOSED_OPTION);
-                    this.dispose();
+                    
                     break;
                 }
                 default:
