@@ -34,13 +34,17 @@ public class conexiuneBazaUtilizator {
     public conexiuneBazaUtilizator()
     {
         try{
-            conex=DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11232479",
-                    "sql11232479","haBIj64Iml");
+            conex=DriverManager.getConnection("jdbc:mysql://sql11.freemysqlhosting.net:3306/sql11236630",
+                    "sql11236630","s3Ta6t7lWV");
         }
     catch(SQLException e)
     {
     System.out.println(e);
     }
+    }
+    public void closeCon() throws SQLException
+    {
+        conex.close();
     }
     
     
