@@ -48,7 +48,7 @@ public class conexiuneBazaUtilizator {
     }
     
     
-    public int inregistrare(String nume, String parola, String adresaMail)
+    public synchronized int inregistrare(String nume, String parola, String adresaMail)
     {
         try{
             Statement st=conex.createStatement();
@@ -80,7 +80,7 @@ public class conexiuneBazaUtilizator {
 
     }
     
-        public int login(String nume, String parola)
+        public synchronized int login(String nume, String parola)
     {
         
         try{
@@ -110,7 +110,7 @@ public class conexiuneBazaUtilizator {
 
     }
     
-    public ArrayList getUtilizatorParolaMail(String mail) 
+    public synchronized ArrayList getUtilizatorParolaMail(String mail) 
     {
         ArrayList <String> username;
         username = new ArrayList<>();
@@ -139,7 +139,7 @@ public class conexiuneBazaUtilizator {
     }    
         
     
-    public void selectAll()
+    public synchronized void selectAll()
     {
         try{
             Statement st=conex.createStatement();
@@ -157,6 +157,4 @@ public class conexiuneBazaUtilizator {
             
         }
     }
-    
-
 }
