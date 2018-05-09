@@ -11,6 +11,7 @@ package server;
  */
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import server.client.ListenServer;
 public class loginform extends javax.swing.JFrame {
 
     /**
@@ -288,6 +289,8 @@ public class loginform extends javax.swing.JFrame {
                 }
                 case 1:{
                     JOptionPane.showMessageDialog(null, mesajServer,"OK", JOptionPane.CLOSED_OPTION);
+                    this.dispose();
+                    client.visible();
                     
                     break;
                 }

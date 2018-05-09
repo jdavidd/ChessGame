@@ -26,6 +26,7 @@ public class client {
 
     private static BufferedReader in;
     private static PrintWriter out;
+    private static entergui i = new entergui();
     private JTextField dataField = new JTextField(40);
     private JTextArea messageArea = new JTextArea(8, 60);
 
@@ -37,6 +38,7 @@ public class client {
     public client() {
            // Layout GUI
    
+        /*
         // Add Listeners
         dataField.addActionListener((ActionEvent e) -> {
             out.println(dataField.getText());
@@ -51,14 +53,8 @@ public class client {
             }
             messageArea.append(response + "\n");
             dataField.selectAll();
-        } /**
-         * Responds to pressing the enter key in the textfield
-         * by sending the contents of the text field to the
-         * server and displaying the response from the server
-         * in the text area.  If the response is "." we exit
-         * the whole application, which closes all sockets,
-         * streams and windows.
-         */ );
+        }  );
+         */
     }
     
     public static String read() {
@@ -95,7 +91,9 @@ public class client {
         // Consume the initial welcoming messages from the server
 
     }
-
+    static void visible() {
+        i.setVisible(true);
+    }
     /**
      * Runs the client application.
      * @param args
@@ -105,8 +103,11 @@ public class client {
         client client = new client();
         client.connectToServer();
         singup.mainn();
+        
+        
     }
-    private static class ListenServer extends Thread {
+    
+    public static class ListenServer extends Thread {
         
         @Override
         public void run() {
