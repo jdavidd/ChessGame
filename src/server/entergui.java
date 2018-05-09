@@ -11,9 +11,6 @@ package server;
  */
 public class entergui extends javax.swing.JFrame {
 
-    /**
-     * Creates new form mdsUI
-     */
     public entergui() {
         initComponents();
     }
@@ -282,11 +279,6 @@ public class entergui extends javax.swing.JFrame {
         }
         //</editor-fold>
         //</editor-fold>
-
-        /*  java.awt.EventQueue.invokeLater(() -> {
-            entergui entergui = new entergui();
-            entergui.setVisible(true);
-        });*/
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new entergui();

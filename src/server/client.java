@@ -93,7 +93,6 @@ public class client {
     }
     static void visible() {
         i.setVisible(true);
-        
     }
     /**
      * Runs the client application.
