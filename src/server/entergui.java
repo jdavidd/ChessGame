@@ -5,6 +5,8 @@
  */
 package server;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author mirce
@@ -13,6 +15,16 @@ public class entergui extends javax.swing.JFrame {
 
     public entergui() {
         initComponents();
+    }
+    static void fillTable() {        
+        ArrayList<String> users = new ArrayList<>();
+        users = Server.getListaUtilizatori();
+        
+        System.out.println("yu");
+        
+        for(int i = 0; i < users.size(); ++i) {
+            System.out.println(users.get(i));
+        }
     }
 
     /**

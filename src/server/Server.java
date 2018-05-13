@@ -48,8 +48,18 @@ public class Server {
             }
         }
     }
+
+    public static ArrayList<String> getListaUtilizatori() {
+        ArrayList <String> users = new ArrayList<> ();
+        System.out.println(listaUtilizatori.size());
+        for (int i = 0; i < listaUtilizatori.size(); i++) { 
+            users.add(listaUtilizatori.get(i).getNume());
+        }
+        return users;
+    }
     
-    private static class Player extends Thread{
+    
+    public static class Player extends Thread{
         private final int clientNumber;
         private final Socket socket;
         private int idUser;
@@ -57,7 +67,7 @@ public class Server {
         private room cameraJoc;
         private  BufferedReader in;         
         private  PrintWriter out;            
-        private Boolean mutex;              
+        private final Boolean mutex;              
         public Player(Socket socket,int clientNumber){
             idUser=0;
             numeUser=new String();
@@ -74,6 +84,7 @@ public class Server {
             System.out.println("There is a new connection with client number "+clientNumber);
             mutex=false;
         }
+        
         @Override
         public void run(){
             try {
@@ -106,6 +117,7 @@ public class Server {
                     //S-a facut o cerere de inregistrare
                         case 1:
                         {
+                            ConfirmBox.display("test","singu");
                             int resultConexiune=conexiuneUtilizator.inregistrare(cerere.get(1),cerere.get(2),cerere.get(3));
                         switch (resultConexiune) {
                             case -1:
@@ -144,13 +156,23 @@ public class Server {
                                 numeUser=cerere.get(1);
                                 Boolean ok=true;
                                 int lungime=listaUtilizatori.size();
+                                System.out.println(lungime);
+                                ArrayList<String> users = new ArrayList<>();
+                                users = getListaUtilizatori();
+                                ConfirmBox.display("Test","Am ajuns");
+                                for(int i = 0; i < users.size(); i++) {
+                                    ConfirmBox.display("Test",users.get(i));
+                                }
+                                
+                            
                                 for(int i=0;i<lungime;++i)
                                     if(idUser==(listaUtilizatori.get(i).getID()))
                                     {
                                         ok=false;
                                     }
                                 if(ok==true)
-                                {listaUtilizatori.add(this);
+                                {
+                                    listaUtilizatori.add(this);
                                  out.println("1;Login reusit");
                                 }
                                 else

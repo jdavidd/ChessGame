@@ -5,7 +5,6 @@
  */
 package server;
 
-import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,10 +25,10 @@ public class client {
 
     private static BufferedReader in;
     private static PrintWriter out;
-    private static entergui i = new entergui();
+    private static final entergui i = new entergui();
     private JTextField dataField = new JTextField(40);
     private JTextArea messageArea = new JTextArea(8, 60);
-
+    private static ListenServer listener;
     /**
      * Constructs the client by laying out the GUI and registering a
      * listener with the textfield so that pressing Enter in the
@@ -37,7 +36,9 @@ public class client {
      */
     public client() {
            // Layout GUI
-   
+           
+        listener=new ListenServer();
+        
         /*
         // Add Listeners
         dataField.addActionListener((ActionEvent e) -> {
@@ -57,10 +58,12 @@ public class client {
          */
     }
     
+    
     public static String read() {
         String mesajServer = new String();
         try {
             mesajServer = in.readLine();
+            
         } catch (IOException ex) {
             Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -68,6 +71,12 @@ public class client {
     }
     public static void send(String codedMessage) {
         out.println(codedMessage);
+    }
+    
+    public static void listenerStart()
+    {
+        listener.start();
+        
     }
     
     /**
@@ -93,6 +102,7 @@ public class client {
     }
     static void visible() {
         i.setVisible(true);
+        entergui.fillTable();
     }
     /**
      * Runs the client application.
@@ -111,6 +121,7 @@ public class client {
         
         @Override
         public void run() {
+            System.out.println("Threadul de listen server a inceput!!!!");
             while(true) {
                 try {
                     String messageServer = in.readLine();
