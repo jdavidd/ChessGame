@@ -33,9 +33,7 @@ public class entergui extends javax.swing.JFrame {
     static void getPlayers() {
         client.send("7;;;");
         players = new ArrayList<>();
-        players = client.readplayer(); 
-        fillTable();
-        
+        players = client.readplayer();  
     }
     /**
      * This method is called from within the constructor to initialize the form.
