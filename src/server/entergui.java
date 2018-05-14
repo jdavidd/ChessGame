@@ -17,13 +17,11 @@ public class entergui extends javax.swing.JFrame {
         initComponents();
     }
     static void fillTable() {        
-        ArrayList<String> users = new ArrayList<>();
-        users = Server.getListaUtilizatori();
-        
-        System.out.println("yu");
-        
-        for(int i = 0; i < users.size(); ++i) {
-            System.out.println(users.get(i));
+        client.send("7;;;");
+        ArrayList<String> players = new ArrayList<>();
+        players = client.readplayer();
+        for(int i = 0; i < players.size(); i++) {
+            System.out.println(players.get(i));
         }
     }
 
@@ -53,6 +51,11 @@ public class entergui extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         Background.setBackground(new java.awt.Color(2, 28, 30));
         Background.setPreferredSize(new java.awt.Dimension(1400, 800));
@@ -265,6 +268,11 @@ public class entergui extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        
+        client.send("-1;;;");
+    }//GEN-LAST:event_formWindowClosing
 
    
     public static void mainn() {

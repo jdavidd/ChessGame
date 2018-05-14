@@ -13,6 +13,8 @@ added player and room
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -48,16 +50,6 @@ public class Server {
             }
         }
     }
-
-    public static ArrayList<String> getListaUtilizatori() {
-        ArrayList <String> users = new ArrayList<> ();
-        System.out.println(listaUtilizatori.size());
-        for (int i = 0; i < listaUtilizatori.size(); i++) { 
-            users.add(listaUtilizatori.get(i).getNume());
-        }
-        return users;
-    }
-    
     
     public static class Player extends Thread{
         private final int clientNumber;
@@ -67,7 +59,12 @@ public class Server {
         private room cameraJoc;
         private  BufferedReader in;         
         private  PrintWriter out;            
-        private final Boolean mutex;              
+        private final Boolean mutex;       
+        
+        private ObjectOutputStream outt;
+        private ObjectInputStream inn;
+
+        
         public Player(Socket socket,int clientNumber){
             idUser=0;
             numeUser=new String();
@@ -77,6 +74,10 @@ public class Server {
             try {
                 in=new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 out=new PrintWriter(socket.getOutputStream(),true);
+                
+                outt = new ObjectOutputStream(socket.getOutputStream());
+                // Create an input stream from the socket
+                inn = new ObjectInputStream(socket.getInputStream());
             } catch (IOException ex) {
                 Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -85,6 +86,16 @@ public class Server {
             mutex=false;
         }
         
+        
+        public static ArrayList<String> getListaUtilizatori() {
+            ArrayList <String> users = new ArrayList<> ();
+            System.out.println(listaUtilizatori.size());
+            for (int i = 0; i < listaUtilizatori.size(); i++) { 
+                users.add(listaUtilizatori.get(i).getNume());
+            }
+            return users;
+        }
+
         @Override
         public void run(){
             try {
@@ -112,6 +123,7 @@ public class Server {
                         {
                             
                             out.println("EXIT_CLIENT");
+                            System.out.println("am inchis clientul");
                             break OUTER;
                         }
                     //S-a facut o cerere de inregistrare
@@ -156,15 +168,7 @@ public class Server {
                                 numeUser=cerere.get(1);
                                 Boolean ok=true;
                                 int lungime=listaUtilizatori.size();
-                                System.out.println(lungime);
-                                ArrayList<String> users = new ArrayList<>();
-                                users = getListaUtilizatori();
-                                ConfirmBox.display("Test","Am ajuns");
-                                for(int i = 0; i < users.size(); i++) {
-                                    ConfirmBox.display("Test",users.get(i));
-                                }
-                                
-                            
+                        
                                 for(int i=0;i<lungime;++i)
                                     if(idUser==(listaUtilizatori.get(i).getID()))
                                     {
@@ -173,7 +177,8 @@ public class Server {
                                 if(ok==true)
                                 {
                                     listaUtilizatori.add(this);
-                                 out.println("1;Login reusit");
+                                    out.println("1;Login reusit");
+                         
                                 }
                                 else
                                 out.println("0;Exista deja un utilizator logat in acest cont");
@@ -244,12 +249,23 @@ public class Server {
                         System.out.println("\n\n\n");*/
                             
                             break;
-                        }//COD ADAUGAT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                         case 6: {
+                        }
+                        //COD ADAUGAT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                        case 6: {
                                 // mesajul primit de client va fi de forma 6;nume: mesaj
                                 broadcast(cerere.get(1));
                                 break;
-                            }
+                        }
+                        //cod 7 send players array
+                        case 7: {
+                            System.out.println("AM ajuns aiciii");
+                             
+                            ArrayList<String> users = new ArrayList<>();
+                            users = getListaUtilizatori();        
+                            outt.writeObject(users);
+                            break;
+                         }
+                        
                         default:
                         {
                             //!!!!!!!!!!!!!!!!!!!!!AICICI AI ADAUGAT COD!!!!!!!!!!!!!!!!!!!!!!!

@@ -8,6 +8,8 @@ package server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -29,6 +31,10 @@ public class client {
     private JTextField dataField = new JTextField(40);
     private JTextArea messageArea = new JTextArea(8, 60);
     private static ListenServer listener;
+    
+    private static ObjectOutputStream outt;
+    private static ObjectInputStream inn;
+
     /**
      * Constructs the client by laying out the GUI and registering a
      * listener with the textfield so that pressing Enter in the
@@ -72,6 +78,16 @@ public class client {
     public static void send(String codedMessage) {
         out.println(codedMessage);
     }
+
+    public static ArrayList<String> readplayer() {
+        ArrayList<String> players = new ArrayList<>();
+        try {
+            players = (ArrayList<String>) inn.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return players;
+    }
     
     public static void listenerStart()
     {
@@ -98,7 +114,8 @@ public class client {
         out = new PrintWriter(socket.getOutputStream(), true);
 
         // Consume the initial welcoming messages from the server
-
+        outt = new ObjectOutputStream(socket.getOutputStream());
+        inn = new ObjectInputStream(socket.getInputStream());
     }
     static void visible() {
         i.setVisible(true);
