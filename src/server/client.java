@@ -13,7 +13,6 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextArea;
@@ -28,7 +27,6 @@ public class client {
 
     private static BufferedReader in;
     private static PrintWriter out;
-    private static final entergui i = new entergui();
     private JTextField dataField = new JTextField(40);
     private JTextArea messageArea = new JTextArea(8, 60);
     private static ListenServer listener;
@@ -119,14 +117,8 @@ public class client {
         inn = new ObjectInputStream(socket.getInputStream());
     }
     static void visible() {
-        entergui.mainn();
-        entergui.getPlayers();
-        try {
-            TimeUnit.SECONDS.sleep(5);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        entergui.fillTable();
+        entergui.mainn();  
+        
     }
     /**
      * Runs the client application.
@@ -137,8 +129,6 @@ public class client {
         client client = new client();
         client.connectToServer();
         singup.mainn();
-        
-        
     }
     
     public static class ListenServer extends Thread {

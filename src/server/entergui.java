@@ -19,21 +19,32 @@ public class entergui extends javax.swing.JFrame {
     }
     private static ArrayList<String> players;
     
-    static void fillTable() {        
-    
+    static void fillTable() {
         DefaultTableModel model = (DefaultTableModel) PlayerTable.getModel();
         Object rowData[] = new Object[2];
         for(int i = 0; i < players.size(); i++) {
-            System.out.println(players.get(i));
             rowData[0] = players.get(i);
             rowData[1] = 0;
             model.addRow(rowData);
         }
     }
+
     static void getPlayers() {
         client.send("7;;;");
         players = new ArrayList<>();
         players = client.readplayer();  
+    }
+    void refresh() {
+        getPlayers();
+        DefaultTableModel model = (DefaultTableModel) PlayerTable.getModel();
+        model.setRowCount(0);
+        Object rowData[] = new Object[2];
+        for(int i = 0; i < players.size(); i++) {
+            rowData[0] = players.get(i);
+            rowData[1] = 0;
+            model.addRow(rowData);
+        }
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -295,7 +306,7 @@ public class entergui extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
-        fillTable();
+        refresh();
     }//GEN-LAST:event_jButton5MouseClicked
 
    
@@ -326,6 +337,9 @@ public class entergui extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new entergui().setVisible(true);
+                entergui.getPlayers();
+                entergui.fillTable();
+               
             }
         });
     }
