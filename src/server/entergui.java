@@ -326,7 +326,7 @@ public class entergui extends javax.swing.JFrame {
         //</editor-fold>
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new entergui();
+                new entergui().setVisible(true);
             }
         });
     }

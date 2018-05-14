@@ -118,7 +118,7 @@ public class client {
         inn = new ObjectInputStream(socket.getInputStream());
     }
     static void visible() {
-        i.setVisible(true);
+        entergui.mainn();
         entergui.getPlayers();
     }
     /**
