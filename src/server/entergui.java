@@ -6,6 +6,7 @@
 package server;
 
 import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -16,15 +17,25 @@ public class entergui extends javax.swing.JFrame {
     public entergui() {
         initComponents();
     }
-    static void fillTable() {        
-        client.send("7;;;");
-        ArrayList<String> players = new ArrayList<>();
-        players = client.readplayer();
+    private static ArrayList<String> players;
+    
+    public void fillTable() {        
+    
+        DefaultTableModel model = (DefaultTableModel) PlayerTable.getModel();
+        Object rowData[] = new Object[2];
         for(int i = 0; i < players.size(); i++) {
             System.out.println(players.get(i));
+            rowData[0] = players.get(i);
+            rowData[1] = 0;
+            model.addRow(rowData);
         }
     }
-
+    static void getPlayers() {
+        client.send("7;;;");
+        players = new ArrayList<>();
+        players = client.readplayer(); 
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -39,7 +50,7 @@ public class entergui extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         TableRoom = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        PlayerTable = new javax.swing.JTable();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -91,22 +102,27 @@ public class entergui extends javax.swing.JFrame {
 
         jScrollPane4.setOpaque(false);
 
-        jTable2.setBackground(new java.awt.Color(44, 120, 115));
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        PlayerTable.setBackground(new java.awt.Color(44, 120, 115));
+        PlayerTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Player", "Rank"
             }
-        ));
-        jTable2.setGridColor(new java.awt.Color(44, 120, 115));
-        jTable2.setOpaque(false);
-        jTable2.setSelectionBackground(new java.awt.Color(111, 185, 143));
-        jScrollPane4.setViewportView(jTable2);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        PlayerTable.setGridColor(new java.awt.Color(44, 120, 115));
+        PlayerTable.setOpaque(false);
+        PlayerTable.setSelectionBackground(new java.awt.Color(111, 185, 143));
+        jScrollPane4.setViewportView(PlayerTable);
 
         jScrollPane1.setOpaque(false);
 
@@ -205,6 +221,11 @@ public class entergui extends javax.swing.JFrame {
         jButton5.setBackground(new java.awt.Color(0, 68, 69));
         jButton5.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         jButton5.setText("Reimprospateaza");
+        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton5MouseClicked(evt);
+            }
+        });
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -274,6 +295,10 @@ public class entergui extends javax.swing.JFrame {
         client.send("-1;;;");
     }//GEN-LAST:event_formWindowClosing
 
+    private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
+        fillTable();
+    }//GEN-LAST:event_jButton5MouseClicked
+
    
     public static void mainn() {
         /* Set the Nimbus look and feel */
@@ -308,6 +333,7 @@ public class entergui extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Background;
+    private javax.swing.JTable PlayerTable;
     private javax.swing.JTable TableRoom;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -319,7 +345,6 @@ public class entergui extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable2;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     // End of variables declaration//GEN-END:variables

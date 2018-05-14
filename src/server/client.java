@@ -83,7 +83,7 @@ public class client {
         ArrayList<String> players = new ArrayList<>();
         try {
             players = (ArrayList<String>) inn.readObject();
-        } catch (IOException | ClassNotFoundException ex) {
+         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
         }
         return players;
@@ -119,7 +119,7 @@ public class client {
     }
     static void visible() {
         i.setVisible(true);
-        entergui.fillTable();
+        entergui.getPlayers();
     }
     /**
      * Runs the client application.
