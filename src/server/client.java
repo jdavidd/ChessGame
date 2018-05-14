@@ -120,6 +120,7 @@ public class client {
     static void visible() {
         entergui.mainn();
         entergui.getPlayers();
+        entergui.fillTable();
     }
     /**
      * Runs the client application.

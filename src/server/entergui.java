@@ -19,7 +19,7 @@ public class entergui extends javax.swing.JFrame {
     }
     private static ArrayList<String> players;
     
-    public void fillTable() {        
+    static void fillTable() {        
     
         DefaultTableModel model = (DefaultTableModel) PlayerTable.getModel();
         Object rowData[] = new Object[2];
@@ -34,6 +34,7 @@ public class entergui extends javax.swing.JFrame {
         client.send("7;;;");
         players = new ArrayList<>();
         players = client.readplayer(); 
+        fillTable();
         
     }
     /**
@@ -333,8 +334,8 @@ public class entergui extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Background;
-    private javax.swing.JTable PlayerTable;
-    private javax.swing.JTable TableRoom;
+    private static javax.swing.JTable PlayerTable;
+    private static javax.swing.JTable TableRoom;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -345,7 +346,7 @@ public class entergui extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextArea jTextArea1;
+    private static javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     // End of variables declaration//GEN-END:variables
 }
