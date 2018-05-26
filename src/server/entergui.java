@@ -6,6 +6,8 @@
 package server;
 
 import java.util.ArrayList;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -17,9 +19,9 @@ public class entergui extends javax.swing.JFrame {
     public entergui() {
         initComponents();
     }
-    private static ArrayList<String> players;
-    
-    static void fillTable() {
+    private static ArrayList<String> players = new ArrayList<>();
+    private static ArrayList<String> rooms = new ArrayList<>();
+    static void fillTablePlayer() {
         DefaultTableModel model = (DefaultTableModel) PlayerTable.getModel();
         Object rowData[] = new Object[2];
         for(int i = 0; i < players.size(); i++) {
@@ -28,11 +30,28 @@ public class entergui extends javax.swing.JFrame {
             model.addRow(rowData);
         }
     }
+    static void fillTableRoom() {
+        DefaultTableModel model = (DefaultTableModel) TableRoom.getModel();
+        Object rowData[] = new Object[2];
+        for(int i = 0; i < rooms.size(); i++) {
+            rowData[0] = rooms.get(i);
+            rowData[1] = "0";
+            model.addRow(rowData);
+        }
+    }
 
     static void getPlayers() {
         client.send("7;;;");
         players = new ArrayList<>();
         players = client.readplayer();  
+    }
+    static void getRooms() {
+        client.send("8;;;");
+        rooms = new ArrayList<>();
+        rooms = client.readroom();  
+    }
+    void createRoom(String name){
+        client.send("4;"+name);
     }
     void refresh() {
         getPlayers();
@@ -93,16 +112,24 @@ public class entergui extends javax.swing.JFrame {
         TableRoom.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         TableRoom.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5"
+                "Nume", "Host"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         TableRoom.setFocusable(false);
         TableRoom.setGridColor(new java.awt.Color(44, 120, 115));
         TableRoom.setOpaque(false);
@@ -165,7 +192,7 @@ public class entergui extends javax.swing.JFrame {
 
         jButton4.setBackground(new java.awt.Color(0, 68, 69));
         jButton4.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jButton4.setText("Joc nou");
+        jButton4.setText("Camera noua");
         jButton4.setBorder(null);
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -215,7 +242,7 @@ public class entergui extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
                             .addComponent(jScrollPane4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -223,7 +250,7 @@ public class entergui extends javax.swing.JFrame {
                             .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -259,7 +286,7 @@ public class entergui extends javax.swing.JFrame {
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(126, Short.MAX_VALUE))
+                .addContainerGap(124, Short.MAX_VALUE))
         );
 
         jPanel2.getAccessibleContext().setAccessibleName("");
@@ -297,7 +324,10 @@ public class entergui extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+        JFrame frame = new JFrame("InputDialog Example #1");
+        // prompt the user to enter their name
+        String name = JOptionPane.showInputDialog(frame, "What's your name?");
+        createRoom(name);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -338,7 +368,10 @@ public class entergui extends javax.swing.JFrame {
             public void run() {
                 new entergui().setVisible(true);
                 entergui.getPlayers();
-                entergui.fillTable();
+                entergui.getRooms();
+                entergui.fillTablePlayer();
+                entergui.fillTableRoom();
+                client.listenerStart();
                
             }
         });

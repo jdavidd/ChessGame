@@ -87,6 +87,15 @@ public class client {
         }
         return players;
     }
+     public static ArrayList<String> readroom() {
+        ArrayList<String> players = new ArrayList<>();
+        try {
+            players = (ArrayList<String>) inn.readObject();
+         } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return players;
+    }
     
     public static void listenerStart()
     {
@@ -139,6 +148,7 @@ public class client {
             while(true) {
                 try {
                     String messageServer = in.readLine();
+                    System.out.println(messageServer);
                     ArrayList<String> cerere = decode(messageServer);
                     int requestType;
                     requestType = Integer.parseInt(cerere.get(0));
@@ -161,7 +171,7 @@ public class client {
                subExit = message.substring(3);
                localList.add(subExit);
             } else {
-                localList.add(subExit);
+                localList.add(subExit);System.out.println(subExit);
                 subExit = message.substring(2);
                 localList.add(subExit);
             }

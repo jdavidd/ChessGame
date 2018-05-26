@@ -95,7 +95,14 @@ public class Server {
             }
             return users;
         }
-
+        public static ArrayList<String> getListaRoom() {
+            ArrayList <String> users = new ArrayList<> ();
+            System.out.println(listaCamere.size());
+            for (int i = 0; i < listaCamere.size(); i++) { 
+                users.add(listaCamere.get(i).getNume());
+            }
+            return users;
+        }
         @Override
         public void run(){
             try {
@@ -220,13 +227,18 @@ public class Server {
                         //Cerere pentru creare camera
                         case 4:
                         {
+                            System.out.println("creez camera");
                          String numeCamera=request.substring(2,request.length());
                          if(cameraJoc!=null)
                         {
                           out.println("-4;Deja faci parte dintr-o camera");    
                         }
                          else
+                        {
+                             
                              this.createRoom(in,out,numeCamera);
+                             out.println("4;Camera creata cu succes");
+                        }
                             break;
                         }
                         //Cazul in care se face cerere de aderare la o camera de joc
@@ -258,14 +270,18 @@ public class Server {
                         }
                         //cod 7 send players array
                         case 7: {
-                            System.out.println("AM ajuns aiciii");
+                            System.out.println("AM ajuns player");
                              
-                            ArrayList<String> users = new ArrayList<>();
-                            users = getListaUtilizatori();        
+                            ArrayList<String> users = getListaUtilizatori();        
                             outt.writeObject(users);
                             break;
                          }
-                        
+                        case 8:{
+                            System.out.println("AM ajuns room");
+                            ArrayList<String> users = getListaRoom();        
+                            outt.writeObject(users);
+                            break;
+                        }
                         default:
                         {
                             //!!!!!!!!!!!!!!!!!!!!!AICICI AI ADAUGAT COD!!!!!!!!!!!!!!!!!!!!!!!

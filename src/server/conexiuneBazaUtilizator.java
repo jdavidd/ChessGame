@@ -63,8 +63,7 @@ public class conexiuneBazaUtilizator {
                     return 2;   //2 inseamna ca numele e deja folosit
                 else
                 {
-                    int inserted=st.executeUpdate("insert into utilizator (nume,parola,adresa_mail,total_jocuri,victorii,rank"
-                            + ") values('"+nume+"','"+parola+"','"+adresaMail+"',0,0,'incepator')");
+                    int inserted=st.executeUpdate("insert into utilizator (nume,parola,adresa_mail,total_jocuri,victorii,rank" + ") values('"+nume+"','"+parola+"','"+adresaMail+"',0,0,'incepator')");
                     if (inserted<=0)
                         return 3; //NU s-a putut insera, eroare de inserare
                     return 0;

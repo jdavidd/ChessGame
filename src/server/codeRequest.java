@@ -23,7 +23,7 @@ package server;
 //mail=mail utilizator, NU POATE AVEA VALOAREA NULL, pentru lispa numelui folositi ""
 public class codeRequest{
     
-    public String codeRequestLoginRegisterMail(String type,String nume, String parola, String mail)
+    public String codeRequestLoginRegisterMail(String type,String nume, String parola, String id)
     {
         String codedMessage=new String();
             switch (type) {
@@ -33,7 +33,7 @@ public class codeRequest{
                     return codedMessage;
                 }
                 case "1":
-                    if(nume.equals("")||parola.equals("")||mail.equals(""))
+                    if(nume.equals("")||parola.equals("")||id.equals(""))
                     {
                         //Numele,parola sau mail nu este valid; pentru inregistrare trebuie cel putin 1 caracter
                         return null;
@@ -47,7 +47,7 @@ public class codeRequest{
                     }    codedMessage=codedMessage.concat("2;");
                     break;
                 case "3":
-                    if(mail.equals(""))
+                    if(id.equals(""))
                     {
                         //Numele sau parola nu este valid; pentur inregistrare trebuie cel putin 1 caracter
                         return null;
@@ -59,7 +59,7 @@ public class codeRequest{
            
            codedMessage=codedMessage.concat(nume+";");
            codedMessage=codedMessage.concat(parola+";");
-           codedMessage=codedMessage.concat(mail);
+           codedMessage=codedMessage.concat(id);
         
         return codedMessage;
     }
