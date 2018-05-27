@@ -129,7 +129,7 @@ public class Server {
                         case -1:
                         {
                             
-                            out.println("EXIT_CLIENT");
+                            out.println("0;EXIT_CLIENT");
                             System.out.println("am inchis clientul");
                             break OUTER;
                         }
@@ -231,13 +231,13 @@ public class Server {
                          String numeCamera=request.substring(2,request.length());
                          if(cameraJoc!=null)
                         {
-                          out.println("-4;Deja faci parte dintr-o camera");    
+                          out.println("0;Deja faci parte dintr-o camera");    
                         }
                          else
                         {
                              
                              this.createRoom(in,out,numeCamera);
-                             out.println("4;Camera creata cu succes");
+                             
                         }
                             break;
                         }
@@ -246,12 +246,14 @@ public class Server {
                         {
                             if(cameraJoc!=null)
                             {
-                                out.println("-5;Deja faci parte dintr-o camera");
+                                out.println("0;Deja faci parte dintr-o camera");
                                 
                             }
                             else{
-                            String numeCamera=request.substring(2,request.length());
-                            this.enterRoom(in, out, numeCamera);
+                                
+                                String numeCamera=request.substring(2,request.length());
+                                this.enterRoom(in, out, numeCamera);
+                            
                             }
                                                 /*for(int i=0;i<listaCamere.size();++i)
                                                     if(listaCamere.get(i).black!=null)
@@ -276,6 +278,7 @@ public class Server {
                             outt.writeObject(users);
                             break;
                          }
+                        //code 8 send rooms array
                         case 8:{
                             System.out.println("AM ajuns room");
                             ArrayList<String> users = getListaRoom();        
@@ -360,17 +363,17 @@ private synchronized void createRoom(BufferedReader in,PrintWriter out,String nu
             if(listaCamere.get(i).getNume().equals(numeCamera))
                 {
                     ok=false;
-                    out.println("-4;Acest nume este deja folosit");
+                    out.println("0;Acest nume este deja folosit");
                 }
                 if(ok==true)
                 try{
                     room camera=new room(this,numeCamera);
                     cameraJoc=camera;
                                 listaCamere.add(camera);
-                                out.println("4;Camera creata");
+                                out.println("1;Camera creata");
                             }catch(Exception e)
                             {
-                                out.println("-4;Probleme la creare");
+                                out.println("0;Probleme la creare");
                             }
     }
     

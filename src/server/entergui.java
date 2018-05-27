@@ -112,11 +112,7 @@ public class entergui extends javax.swing.JFrame {
         TableRoom.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         TableRoom.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+
             },
             new String [] {
                 "Nume", "Host"
@@ -308,7 +304,11 @@ public class entergui extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        int column = 0;
+        int row = TableRoom.getSelectedRow();
+        String value = TableRoom.getModel().getValueAt(row, column).toString();
+        System.out.println(value);
+        client.send("5;"+value);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -326,7 +326,7 @@ public class entergui extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         JFrame frame = new JFrame("InputDialog Example #1");
         // prompt the user to enter their name
-        String name = JOptionPane.showInputDialog(frame, "What's your name?");
+        String name = JOptionPane.showInputDialog(frame, "Introduceti numele camerei");
         createRoom(name);
     }//GEN-LAST:event_jButton4ActionPerformed
 

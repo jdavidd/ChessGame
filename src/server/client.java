@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 /**
@@ -152,6 +153,27 @@ public class client {
                     ArrayList<String> cerere = decode(messageServer);
                     int requestType;
                     requestType = Integer.parseInt(cerere.get(0));
+                    switch(requestType) {
+                        
+                        case 0:{
+                            JOptionPane.showMessageDialog(null, cerere.get(1));
+                        break;
+                        
+                        }
+                        case 1:{
+                            JOptionPane.showMessageDialog(null, cerere.get(1));
+                            break;
+                        }
+                        case -5:{
+                            JOptionPane.showMessageDialog(null, cerere.get(2));        
+                        }
+                        case 5:{
+                            JOptionPane.showMessageDialog(null, cerere.get(1));
+                        }
+                        default:{
+                            
+                        }
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(client.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -170,8 +192,10 @@ public class client {
                localList.add(subExit);
                subExit = message.substring(3);
                localList.add(subExit);
-            } else {
-                localList.add(subExit);System.out.println(subExit);
+            }
+            else 
+            {
+                localList.add(subExit);
                 subExit = message.substring(2);
                 localList.add(subExit);
             }
