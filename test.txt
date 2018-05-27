@@ -1,3 +1,10 @@
 Salut 
+<<<<<<< HEAD
 David
 hei
+||||||| merged common ancestors
+DavidS
+=======
+David
+hei hai
+>>>>>>> junit_test
