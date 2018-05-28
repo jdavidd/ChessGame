@@ -164,11 +164,52 @@ public class client {
                             JOptionPane.showMessageDialog(null, cerere.get(1));
                             break;
                         }
+                        case 2:{
+                            entergui.addCamera(messageServer.substring(2,messageServer.length()));
+                            break;
+                        }
                         case -5:{
-                            JOptionPane.showMessageDialog(null, cerere.get(2));        
+                            JOptionPane.showMessageDialog(null, cerere.get(2)); 
+                            break;
+                        }
+                        case 4:{
+                            JOptionPane.showMessageDialog(null, cerere.get(1));
+                            chessGUI.hai();
+                            break;
+                        }
+                        case -4:
+                        {
+                            JOptionPane.showMessageDialog(null, cerere.get(2)); 
+                            break;
                         }
                         case 5:{
                             JOptionPane.showMessageDialog(null, cerere.get(1));
+                            chessGUI.hai();
+                            break;
+                        }
+                        case 6:
+                        {
+                            System.out.println("A ajuns mesaj");
+                            entergui.ataseazaMesajChat(messageServer.substring(2,messageServer.length()));
+                            break;
+                        }
+                        case 8:
+                        {
+                        break;
+                        }
+                        case -9:
+                        {
+                         JOptionPane.showMessageDialog(null, cerere.get(1),"OK", JOptionPane.CLOSED_OPTION);   
+                         break;
+                        }
+                        case 9:
+                        {
+                        int linie=Integer.parseInt(messageServer.substring(2,3));
+                        int coloana=Integer.parseInt(messageServer.substring(3,4));
+                        int linieNoua=Integer.parseInt(messageServer.substring(5,6));
+                        int coloanaNoua=Integer.parseInt(messageServer.substring(6,7));
+                        chessGUI.mutare(linie, coloana, linieNoua, coloanaNoua);
+                        break;
                         }
                         default:{
                             
