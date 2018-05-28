@@ -231,7 +231,7 @@ public class Server {
                          String numeCamera=request.substring(2,request.length());
                          if(cameraJoc!=null)
                         {
-                          out.println("0;Deja faci parte dintr-o camera");    
+                          out.println("-4;Deja faci parte dintr-o camera");    
                         }
                          else
                         {
@@ -246,7 +246,7 @@ public class Server {
                         {
                             if(cameraJoc!=null)
                             {
-                                out.println("0;Deja faci parte dintr-o camera");
+                                out.println("-5;Deja faci parte dintr-o camera");
                                 
                             }
                             else{
@@ -267,12 +267,13 @@ public class Server {
                         //COD ADAUGAT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         case 6: {
                                 // mesajul primit de client va fi de forma 6;nume: mesaj
-                                broadcast(cerere.get(1));
+                                //System.out.println("Hopa mesaj!");
+                                broadcast(cerere.get(1),this.getNume());
                                 break;
                         }
                         //cod 7 send players array
                         case 7: {
-                            System.out.println("AM ajuns player");
+                            //System.out.println("AM ajuns player");
                              
                             ArrayList<String> users = getListaUtilizatori();        
                             outt.writeObject(users);
@@ -280,9 +281,16 @@ public class Server {
                          }
                         //code 8 send rooms array
                         case 8:{
-                            System.out.println("AM ajuns room");
+                            //System.out.println("AM ajuns room");
                             ArrayList<String> users = getListaRoom();        
                             outt.writeObject(users);
+                            break;
+                        }
+                        case 9:
+                        {
+                            //System.out.println("Uraaa! A Ajuns in case 8");
+                            
+                            this.cameraJoc.makeMove(Integer.parseInt(request.substring(2,3)),Integer.parseInt(request.substring(3,4)),Integer.parseInt(request.substring(5,6)),Integer.parseInt(request.substring(6,7)), this);
                             break;
                         }
                         default:
@@ -322,7 +330,7 @@ public class Server {
     }
     
     
-    private boolean writeMsg(String msg) {
+    private synchronized boolean writeMsg(String msg) {
         if(!socket.isConnected()) {
             try {
                 socket.close();
@@ -340,10 +348,10 @@ public class Server {
             return true;
         }
 
-    private static synchronized void broadcast(String message) {
+    private static synchronized void broadcast(String message,String nume) {
         SimpleDateFormat sdf = new SimpleDateFormat();
         String time = sdf.format(new Date());
-        String messageLf = time + " " + message;
+        String messageLf = "6;"+time+" "+nume + ": " + message;
 
         for(int i = listaUtilizatori.size() - 1; i >= 0; i--) {
             Player player = listaUtilizatori.get(i);
@@ -363,17 +371,28 @@ private synchronized void createRoom(BufferedReader in,PrintWriter out,String nu
             if(listaCamere.get(i).getNume().equals(numeCamera))
                 {
                     ok=false;
-                    out.println("0;Acest nume este deja folosit");
+                    out.println("-4;Acest nume este deja folosit");
                 }
                 if(ok==true)
                 try{
                     room camera=new room(this,numeCamera);
                     cameraJoc=camera;
                                 listaCamere.add(camera);
-                                out.println("1;Camera creata");
+                                out.println("4;Camera creata");
+                                       for(int i = listaUtilizatori.size() - 1; i >= 0; i--) {
+                                Player player = listaUtilizatori.get(i);
+                            // try to write to the Client if it fails remove it from the list
+                            if(!player.writeMsg("2;"+numeCamera)) {
+                                listaUtilizatori.remove(i);
+                                 System.out.println("Disconnected Client " + player.numeUser + " removed from list.");
+                                        }
+                                       }                    
+                                
+                                
+                                
                             }catch(Exception e)
                             {
-                                out.println("0;Probleme la creare");
+                                out.println("4;Probleme la creare");
                             }
     }
     
@@ -430,6 +449,15 @@ private synchronized void createRoom(BufferedReader in,PrintWriter out,String nu
                 localList.add(subExit);
                 localList.add(a.substring(2));
                 break;
+            case "7":
+                localList.add(subExit);
+                break;
+            case "8":
+                localList.add(subExit);
+                break;
+            case "9":
+                localList.add(subExit);
+                break;
             default:
                 if(a.substring(0,2).equals("DA"))
                 {
@@ -464,13 +492,16 @@ private synchronized void createRoom(BufferedReader in,PrintWriter out,String nu
     private static class room{
         private final Player white;
         public  Player black;
-        private final Player currentPlayer;
+        private  Player currentPlayer;
         private final String nume;
+        
+        Game game;
         public room(Player X,String NUME ){
             white=X;
             black=null;
             currentPlayer=white;
             nume=NUME;
+            game=new Game();
         }
         //COD ADAUGAT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         public synchronized Boolean aderare(Player Y)
@@ -485,6 +516,33 @@ private synchronized void createRoom(BufferedReader in,PrintWriter out,String nu
         {
             return nume;
         }
+        public synchronized boolean makeMove(int linie, int coloana,int linieNoua, int coloanaNoua,Player jucator)
+        {
+            if(jucator!=this.currentPlayer)
+            {
+                jucator.writeMsg("-9;Este randul oponentului");
+                return false;
+            }
+            else
+            {
+               if(game.move(linie,coloana,linieNoua,coloanaNoua)==true)
+               {
+                  // System.out.println("A ajuns aici la game move");
+                if(currentPlayer==white) currentPlayer=black;
+                else
+                    currentPlayer=white;
+                jucator.writeMsg("9;"+linie+coloana+";"+linieNoua+coloanaNoua+";");
+                currentPlayer.writeMsg("9;"+linie+coloana+";"+linieNoua+coloanaNoua+";");
+                return true;
+                }
+               else
+               {
+                   jucator.writeMsg("-9;Mutare nevalida");
+               }
+            }
+        //COD ADAUGAT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            return false;
+    }    
         //COD ADAUGAT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }    
 }
