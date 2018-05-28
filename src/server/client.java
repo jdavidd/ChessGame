@@ -169,7 +169,7 @@ public class client {
                             break;
                         }
                         case -5:{
-                            JOptionPane.showMessageDialog(null, cerere.get(2)); 
+                            JOptionPane.showMessageDialog(null, cerere.get(1)); 
                             break;
                         }
                         case 4:{
@@ -179,7 +179,7 @@ public class client {
                         }
                         case -4:
                         {
-                            JOptionPane.showMessageDialog(null, cerere.get(2)); 
+                            JOptionPane.showMessageDialog(null, cerere.get(1)); 
                             break;
                         }
                         case 5:{
